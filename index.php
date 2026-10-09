@@ -1,0 +1,682 @@
+
+<?php
+// index.php
+// Dashboard Analisis Sentimen Abu Vulkanik Anak Krakatau
+
+$posts = [
+    [
+        'platform' => 'Twitter / X',
+        'userHandle' => '@BantenInfo24',
+        'userName' => 'Kabar Banten & Pesisir',
+        'content' => 'Contoh postingan tentang abu vulkanik di Anyer. Warga mengeluhkan tenggorokan gatal dan mata perih serta mengingatkan penggunaan masker.',
+        'sentiment' => 'Negatif',
+        'score' => 0.88,
+        'topic' => 'Kesehatan & Debu',
+        'timestamp' => '2026-10-08T08:15:00+07:00',
+        'likes' => 420,
+        'retweets' => 185,
+        'replies' => 42,
+        'location' => 'Anyer, Banten'
+    ],
+    [
+        'platform' => 'News Feed',
+        'userHandle' => '@RadarLampungNews',
+        'userName' => 'Radar Lampung Online',
+        'content' => 'Contoh informasi mengenai kemungkinan gangguan penerbangan akibat abu vulkanik. Periksa informasi aktual melalui sumber resmi.',
+        'sentiment' => 'Negatif',
+        'score' => 0.76,
+        'topic' => 'Penerbangan & Transportasi',
+        'timestamp' => '2026-10-08T09:30:00+07:00',
+        'likes' => 890,
+        'retweets' => 310,
+        'replies' => 88,
+        'location' => 'Bandar Lampung'
+    ],
+    [
+        'platform' => 'Instagram',
+        'userHandle' => '@infopvmbg',
+        'userName' => 'Informasi Aktivitas Gunung',
+        'content' => 'Contoh informasi aktivitas gunung api. Periksa laporan resmi PVMBG untuk mengetahui kondisi, status, dan rekomendasi keselamatan terkini.',
+        'sentiment' => 'Netral',
+        'score' => 0.95,
+        'topic' => 'Laporan Aktivitas Gunung',
+        'timestamp' => '2026-10-08T10:00:00+07:00',
+        'likes' => 3420,
+        'retweets' => 520,
+        'replies' => 112,
+        'location' => 'Selat Sunda'
+    ],
+    [
+        'platform' => 'Facebook',
+        'userHandle' => '@BPBD_Banten',
+        'userName' => 'Informasi BPBD Banten',
+        'content' => 'Contoh informasi bantuan masker dan penanganan warga yang terdampak abu vulkanik di wilayah pesisir.',
+        'sentiment' => 'Positif',
+        'score' => 0.91,
+        'topic' => 'Bantuan & Tanggap Darurat',
+        'timestamp' => '2026-10-08T11:20:00+07:00',
+        'likes' => 670,
+        'retweets' => 98,
+        'replies' => 29,
+        'location' => 'Labuan, Pandeglang'
+    ],
+    [
+        'platform' => 'Twitter / X',
+        'userHandle' => '@TaniPesisir',
+        'userName' => 'Informasi Petani Pesisir',
+        'content' => 'Contoh keluhan petani mengenai abu yang menempel pada tanaman dan kekhawatiran terhadap hasil panen.',
+        'sentiment' => 'Negatif',
+        'score' => 0.82,
+        'topic' => 'Pertanian & Tanaman',
+        'timestamp' => '2026-10-08T12:45:00+07:00',
+        'likes' => 210,
+        'retweets' => 64,
+        'replies' => 15,
+        'location' => 'Kalianda, Lampung'
+    ],
+    [
+        'platform' => 'TikTok',
+        'userHandle' => '@warga_carita',
+        'userName' => 'Informasi Warga Carita',
+        'content' => 'Contoh laporan kondisi lingkungan pesisir. Informasi lapangan perlu diperiksa dan dibandingkan dengan sumber resmi.',
+        'sentiment' => 'Netral',
+        'score' => 0.84,
+        'topic' => 'Lingkungan Pesisir',
+        'timestamp' => '2026-10-08T14:10:00+07:00',
+        'likes' => 2150,
+        'retweets' => 140,
+        'replies' => 95,
+        'location' => 'Carita, Banten'
+    ],
+    [
+        'platform' => 'Instagram',
+        'userHandle' => '@seputar_cilegon',
+        'userName' => 'Informasi Cilegon',
+        'content' => 'Contoh imbauan kepada pengendara agar berhati-hati jika jalanan licin akibat debu dan menjaga jarak aman.',
+        'sentiment' => 'Negatif',
+        'score' => 0.79,
+        'topic' => 'Keselamatan Jalan Raya',
+        'timestamp' => '2026-10-08T15:05:00+07:00',
+        'likes' => 1890,
+        'retweets' => 410,
+        'replies' => 67,
+        'location' => 'Cilegon, Banten'
+    ],
+    [
+        'platform' => 'Twitter / X',
+        'userHandle' => '@SundaStrait',
+        'userName' => 'Informasi Selat Sunda',
+        'content' => 'Contoh opini masyarakat mengenai aktivitas Anak Krakatau dan harapan agar kondisi lingkungan tetap aman bagi warga.',
+        'sentiment' => 'Negatif',
+        'score' => 0.65,
+        'topic' => 'Kekhawatiran Bencana',
+        'timestamp' => '2026-10-08T16:40:00+07:00',
+        'likes' => 1250,
+        'retweets' => 230,
+        'replies' => 38,
+        'location' => 'Selat Sunda'
+    ]
+];
+
+$counts = ['Negatif' => 0, 'Netral' => 0, 'Positif' => 0];
+
+foreach ($posts as $post) {
+    $counts[$post['sentiment']]++;
+}
+$total = count($posts);
+?>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Krakatau Sentiment Monitor</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+::-webkit-scrollbar {
+    width: 6px;
+}
+::-webkit-scrollbar-thumb {
+    background: #334155;
+    border-radius: 10px;
+}
+.card {
+    background: rgba(15, 23, 42, .88);
+    border: 1px solid #1e293b;
+    border-radius: 16px;
+}
+</style>
+</head>
+
+<body class="bg-slate-950 text-slate-100 min-h-screen">
+
+<header class="sticky top-0 z-40 bg-slate-900/95 border-b border-slate-800 px-4 lg:px-8 py-4">
+<div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-4">
+
+    <div class="flex items-center gap-3">
+        <div class="p-3 rounded-xl bg-gradient-to-tr from-red-600 to-amber-500">
+            <i data-lucide="flame" class="w-6 h-6"></i>
+        </div>
+        <div>
+            <h1 class="font-bold text-lg">Krakatau Sentiment Monitor</h1>
+            <p class="text-xs text-slate-400">Analisis Sentimen Abu Vulkanik Anak Krakatau</p>
+        </div>
+    </div>
+
+    <div class="flex gap-2">
+        <button onclick="openApify()"
+            class="px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 text-xs">
+            <i data-lucide="database" class="inline w-4 h-4"></i>
+            Tarik Data Apify
+        </button>
+
+        <button onclick="generateAI()" id="aiBtn"
+            class="px-3 py-2 rounded-lg bg-gradient-to-r from-red-600 to-amber-600 text-xs font-semibold">
+            <i data-lucide="sparkles" class="inline w-4 h-4"></i>
+            Ringkasan AI Gemini
+        </button>
+    </div>
+
+</div>
+</header>
+
+<main class="max-w-7xl mx-auto p-4 lg:p-8 space-y-6">
+
+<div class="rounded-xl border border-amber-800 bg-amber-950/30 p-3 text-xs text-amber-200">
+    Data awal merupakan data DEMO untuk menguji tampilan aplikasi, bukan postingan nyata yang telah diverifikasi.
+    Gunakan dataset Apify yang sebenarnya untuk penelitian.
+</div>
+
+<!-- STATISTIK -->
+<section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+
+    <div class="card p-5">
+        <p class="text-xs text-slate-400">Total Sampel Data</p>
+        <h2 id="totalData" class="text-3xl font-bold mt-2"><?= $total ?></h2>
+        <p class="text-xs text-slate-500 mt-2">Data dalam dashboard</p>
+    </div>
+
+    <div class="card p-5">
+        <p class="text-xs text-slate-400">Sentimen Negatif</p>
+        <h2 id="negativeData" class="text-3xl font-bold text-red-400 mt-2">
+            <?= number_format($counts['Negatif'] / $total * 100, 1) ?>%
+        </h2>
+        <p class="text-xs text-slate-500 mt-2">Keluhan dan kekhawatiran</p>
+    </div>
+
+    <div class="card p-5">
+        <p class="text-xs text-slate-400">Sentimen Netral</p>
+        <h2 id="neutralData" class="text-3xl font-bold text-slate-300 mt-2">
+            <?= number_format($counts['Netral'] / $total * 100, 1) ?>%
+        </h2>
+        <p class="text-xs text-slate-500 mt-2">Informasi dan laporan</p>
+    </div>
+
+    <div class="card p-5">
+        <p class="text-xs text-slate-400">Sentimen Positif</p>
+        <h2 id="positiveData" class="text-3xl font-bold text-emerald-400 mt-2">
+            <?= number_format($counts['Positif'] / $total * 100, 1) ?>%
+        </h2>
+        <p class="text-xs text-slate-500 mt-2">Apresiasi dan bantuan</p>
+    </div>
+
+</section>
+
+<!-- GRAFIK -->
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+
+    <div class="card p-5">
+        <h2 class="font-semibold text-sm mb-4">Distribusi Sentimen Publik</h2>
+        <div class="h-64">
+            <canvas id="sentimentChart"></canvas>
+        </div>
+    </div>
+
+    <div class="card p-5">
+        <h2 class="font-semibold text-sm mb-4">Topik Utama Pembicaraan</h2>
+        <div class="h-64">
+            <canvas id="topicChart"></canvas>
+        </div>
+    </div>
+
+    <div class="card p-5 border-red-900/50">
+        <h2 class="font-semibold text-amber-300 mb-4">
+            <i data-lucide="sparkles" class="inline w-4 h-4"></i>
+            Analisis Gemini AI
+        </h2>
+        <div id="aiSummary" class="text-xs text-slate-300 leading-6 whitespace-pre-wrap">
+            Klik tombol Ringkasan AI Gemini untuk membuat analisis data.
+        </div>
+    </div>
+
+</section>
+
+<!-- PENCARIAN DAN FILTER -->
+<section class="card p-4 flex flex-col lg:flex-row justify-between gap-4">
+
+    <div class="flex flex-wrap gap-2">
+        <button class="filter-btn bg-red-600 px-4 py-2 rounded-lg text-xs" data-filter="all">
+            Semua
+        </button>
+        <button class="filter-btn bg-slate-800 px-4 py-2 rounded-lg text-xs" data-filter="Negatif">
+            🔴 Negatif
+        </button>
+        <button class="filter-btn bg-slate-800 px-4 py-2 rounded-lg text-xs" data-filter="Netral">
+            ⚪ Netral
+        </button>
+        <button class="filter-btn bg-slate-800 px-4 py-2 rounded-lg text-xs" data-filter="Positif">
+            🟢 Positif
+        </button>
+    </div>
+
+    <input id="searchInput"
+        type="text"
+        placeholder="Cari masker, Anyer, penerbangan..."
+        class="w-full lg:w-80 bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-xs outline-none focus:border-red-500">
+
+</section>
+
+<!-- KARTU POSTINGAN -->
+<section id="postsGrid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4"></section>
+
+</main>
+
+<!-- MODAL APIFY -->
+<div id="apifyModal"
+    class="hidden fixed inset-0 z-50 bg-black/80 p-4 items-center justify-center">
+
+    <div class="card p-6 w-full max-w-lg">
+
+        <div class="flex justify-between mb-4">
+            <h2 class="font-bold">Integrasi Apify API</h2>
+            <button onclick="closeApify()">✕</button>
+        </div>
+
+        <label class="text-xs text-slate-300">Dataset ID Apify</label>
+
+        <input id="datasetId"
+            class="w-full mt-2 p-3 rounded-lg bg-slate-950 border border-slate-700 text-sm"
+            placeholder="Masukkan Dataset ID asli dari Apify">
+
+        <p class="text-xs text-slate-500 mt-2">
+            Token API disimpan di file PHP server, bukan di halaman browser.
+        </p>
+
+        <div class="flex justify-end gap-2 mt-5">
+            <button onclick="closeApify()" class="px-4 py-2 bg-slate-800 rounded-lg text-xs">
+                Batal
+            </button>
+
+            <button id="fetchBtn" onclick="fetchApify()"
+                class="px-4 py-2 bg-red-600 rounded-lg text-xs font-semibold">
+                Ambil Data
+            </button>
+        </div>
+
+        <p id="apiStatus" class="text-xs mt-3 text-slate-400"></p>
+    </div>
+</div>
+
+<div id="toast" class="hidden fixed bottom-5 right-5 bg-slate-800 border border-slate-700 rounded-xl p-4 text-xs shadow-xl"></div>
+
+<script>
+let posts = <?= json_encode(
+    $posts,
+    JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP
+) ?>;
+
+let activeFilter = 'all';
+let sentimentChart;
+let topicChart;
+
+function escapeHTML(value) {
+    return String(value ?? '').replace(/[&<>"']/g, char => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    }[char]));
+}
+
+function normalizeItem(item, index) {
+    const rawSentiment = String(item.sentiment || '').toLowerCase();
+
+    let sentiment = 'Netral';
+    if (['negatif', 'negative'].includes(rawSentiment)) sentiment = 'Negatif';
+    if (['positif', 'positive'].includes(rawSentiment)) sentiment = 'Positif';
+
+    return {
+        id: item.id || String(index + 1),
+        platform: item.platform || item.source || 'Apify',
+        userHandle: item.userHandle || item.username || item.author || 'Pengguna',
+        userName: item.userName || item.authorName || item.username || item.author || 'Pengguna',
+        content: item.content || item.text || item.fullText || item.caption || item.title || '',
+        sentiment: sentiment,
+        score: Number(item.score || item.sentimentScore || 0),
+        topic: item.topic || 'Belum dikategorikan',
+        timestamp: item.timestamp || item.createdAt || item.date || '',
+        likes: Number(item.likes || item.likeCount || 0),
+        retweets: Number(item.retweets || item.retweetCount || 0),
+        replies: Number(item.replies || item.replyCount || 0),
+        location: item.location || item.userLocation || 'Tidak diketahui'
+    };
+}
+
+function showToast(message) {
+    const toast = document.getElementById('toast');
+    toast.textContent = message;
+    toast.classList.remove('hidden');
+
+    setTimeout(() => toast.classList.add('hidden'), 3500);
+}
+
+function renderPosts() {
+    const query = document.getElementById('searchInput').value.toLowerCase();
+
+    const filtered = posts.filter(post => {
+        const matchesFilter =
+            activeFilter === 'all' || post.sentiment === activeFilter;
+
+        const searchable = [
+            post.content,
+            post.userHandle,
+            post.userName,
+            post.location,
+            post.topic,
+            post.platform
+        ].join(' ').toLowerCase();
+
+        return matchesFilter && searchable.includes(query);
+    });
+
+    const grid = document.getElementById('postsGrid');
+
+    if (!filtered.length) {
+        grid.innerHTML = `
+            <div class="card p-8 text-center text-sm text-slate-400 col-span-full">
+                Tidak ada data yang sesuai dengan pencarian.
+            </div>`;
+        return;
+    }
+
+    grid.innerHTML = filtered.map(post => {
+        let color = 'slate';
+
+        if (post.sentiment === 'Negatif') color = 'red';
+        if (post.sentiment === 'Positif') color = 'emerald';
+
+        const date = post.timestamp
+            ? new Date(post.timestamp).toLocaleString('id-ID')
+            : '-';
+
+        const score = post.score
+            ? `(${Math.round(post.score * 100)}%)`
+            : '';
+
+        return `
+        <article class="card p-4 flex flex-col justify-between hover:border-${color}-600 transition">
+            <div>
+                <div class="flex justify-between items-start gap-2 mb-3">
+                    <span class="text-[10px] text-slate-400">
+                        ${escapeHTML(post.platform)}
+                    </span>
+
+                    <span class="text-[10px] rounded-full px-2 py-1 bg-${color}-950 text-${color}-300">
+                        ${escapeHTML(post.sentiment)} ${score}
+                    </span>
+                </div>
+
+                <p class="font-bold text-xs">${escapeHTML(post.userName)}</p>
+                <p class="text-[10px] text-slate-500 mb-3">${escapeHTML(post.userHandle)}</p>
+
+                <p class="text-xs text-slate-300 leading-relaxed mb-4">
+                    ${escapeHTML(post.content)}
+                </p>
+
+                <p class="text-[10px] text-slate-400 mb-3">
+                    🏷️ ${escapeHTML(post.topic)}
+                </p>
+            </div>
+
+            <div class="border-t border-slate-800 pt-3">
+                <p class="text-[10px] text-slate-500 mb-2">
+                    📍 ${escapeHTML(post.location)}
+                </p>
+                <div class="flex justify-between gap-2 text-[10px] text-slate-500">
+                    <span>♥ ${post.likes}　↻ ${post.retweets}</span>
+                    <span>${escapeHTML(date)}</span>
+                </div>
+            </div>
+        </article>`;
+    }).join('');
+}
+
+function updateStatistics() {
+    const total = posts.length;
+    const count = { Negatif: 0, Netral: 0, Positif: 0 };
+
+    posts.forEach(post => {
+        if (count[post.sentiment] !== undefined) {
+            count[post.sentiment]++;
+        }
+    });
+
+    const percentage = key =>
+        total ? (count[key] / total * 100).toFixed(1) + '%' : '0.0%';
+
+    document.getElementById('totalData').textContent = total;
+    document.getElementById('negativeData').textContent = percentage('Negatif');
+    document.getElementById('neutralData').textContent = percentage('Netral');
+    document.getElementById('positiveData').textContent = percentage('Positif');
+}
+
+function updateCharts() {
+    const counts = ['Negatif', 'Netral', 'Positif'].map(
+        sentiment => posts.filter(p => p.sentiment === sentiment).length
+    );
+
+    sentimentChart.data.datasets[0].data = counts;
+    sentimentChart.update();
+
+    const topics = {};
+
+    posts.forEach(post => {
+        topics[post.topic] = (topics[post.topic] || 0) + 1;
+    });
+
+    const sorted = Object.entries(topics)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 6);
+
+    topicChart.data.labels = sorted.map(item => item[0]);
+    topicChart.data.datasets[0].data = sorted.map(item => item[1]);
+    topicChart.update();
+}
+
+function refreshDashboard() {
+    renderPosts();
+    updateStatistics();
+    updateCharts();
+}
+
+function initCharts() {
+    sentimentChart = new Chart(
+        document.getElementById('sentimentChart'),
+        {
+            type: 'doughnut',
+            data: {
+                labels: ['Negatif', 'Netral', 'Positif'],
+                datasets: [{
+                    data: [5, 2, 1],
+                    backgroundColor: ['#ef4444', '#64748b', '#10b981'],
+                    borderColor: '#0f172a',
+                    borderWidth: 3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { color: '#cbd5e1' }
+                    }
+                },
+                cutout: '68%'
+            }
+        }
+    );
+
+    topicChart = new Chart(
+        document.getElementById('topicChart'),
+        {
+            type: 'bar',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Jumlah postingan',
+                    data: [],
+                    backgroundColor: '#f59e0b',
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: {
+                        ticks: { color: '#94a3b8' },
+                        grid: { display: false }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        ticks: { color: '#94a3b8', precision: 0 },
+                        grid: { color: '#1e293b' }
+                    }
+                }
+            }
+        }
+    );
+}
+
+document.querySelectorAll('.filter-btn').forEach(button => {
+    button.addEventListener('click', () => {
+        activeFilter = button.dataset.filter;
+
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.classList.remove('bg-red-600');
+            btn.classList.add('bg-slate-800');
+        });
+
+        button.classList.remove('bg-slate-800');
+        button.classList.add('bg-red-600');
+
+        renderPosts();
+    });
+});
+
+document.getElementById('searchInput').addEventListener('input', renderPosts);
+
+function openApify() {
+    const modal = document.getElementById('apifyModal');
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+}
+
+function closeApify() {
+    const modal = document.getElementById('apifyModal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+}
+
+async function fetchApify() {
+    const id = document.getElementById('datasetId').value.trim();
+    const status = document.getElementById('apiStatus');
+    const button = document.getElementById('fetchBtn');
+
+    if (!id) {
+        status.textContent = 'Masukkan Dataset ID terlebih dahulu.';
+        return;
+    }
+
+    button.disabled = true;
+    status.textContent = 'Sedang mengambil data dari Apify...';
+
+    try {
+        const response = await fetch(
+            'fetch_apify.php?dataset_id=' + encodeURIComponent(id)
+        );
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.error || 'Gagal mengambil data Apify.');
+        }
+
+        if (!Array.isArray(result.items) || result.items.length === 0) {
+            throw new Error('Dataset tidak memiliki data.');
+        }
+
+        posts = result.items.map(normalizeItem);
+
+        // Catatan: item yang tidak memiliki label sentimen
+        // akan diberi label Netral sebagai nilai awal, bukan hasil ML.
+        refreshDashboard();
+        closeApify();
+
+        showToast('Berhasil mengambil ' + posts.length + ' item dari Apify.');
+    } catch (error) {
+        status.textContent = error.message;
+    } finally {
+        button.disabled = false;
+    }
+}
+
+async function generateAI() {
+    const button = document.getElementById('aiBtn');
+    const box = document.getElementById('aiSummary');
+
+    button.disabled = true;
+    box.textContent = 'Gemini sedang menganalisis data...';
+
+    try {
+        const response = await fetch('gemini.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ posts: posts })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.error || 'Analisis AI gagal.');
+        }
+
+        box.textContent = result.summary;
+        showToast('Ringkasan AI berhasil dibuat.');
+    } catch (error) {
+        box.textContent = 'Analisis AI belum tersedia: ' + error.message;
+    } finally {
+        button.disabled = false;
+    }
+}
+
+initCharts();
+refreshDashboard();
+lucide.createIcons();
+</script>
+
+</body>
+</html>
+```
